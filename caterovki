@@ -2,198 +2,82 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>КОТИРОВКА</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#060A12; --panel:#0B1220; --line:rgba(237,232,220,.1);
-    --cream:#EDE8DB; --dim:rgba(237,232,220,.5);
-    --up:#35E08A; --down:#FF5252;
-    --mono:'JetBrains Mono',monospace; --disp:'Unbounded',sans-serif;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    background:var(--bg); color:var(--cream); font-family:var(--mono);
-    display:flex; flex-direction:column; height:100vh; overflow:hidden;
-    background-image:
-      linear-gradient(rgba(237,232,220,.025) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(237,232,220,.025) 1px,transparent 1px);
-    background-size:48px 48px;
-    user-select:none;
-  }
-  /* верхняя строка */
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 32px; border-bottom:1px solid var(--line);
-  }
-  .brand{display:flex;align-items:center;gap:10px;font-size:.85rem;letter-spacing:.25em;font-weight:600}
-  .dot{width:10px;height:10px;border-radius:50%;background:var(--up);animation:blink 1.6s infinite}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-  .clock{font-size:.85rem;color:var(--dim);letter-spacing:.15em}
-
-  /* центр — сам курс */
-  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2vh;min-height:0}
-  .label{font-size:clamp(.7rem,1.6vh,1rem);letter-spacing:.5em;color:var(--dim)}
-  .value{
-    font-family:var(--disp); font-weight:800; line-height:1;
-    font-size:clamp(5rem,26vh,15rem); letter-spacing:-.02em;
-    font-variant-numeric:tabular-nums;
-  }
-  .value.bump{animation:bump .28s}
-  @keyframes bump{0%{transform:scale(1.08)}100%{transform:scale(1)}}
-  .delta{font-size:clamp(1rem,3vh,1.6rem);font-weight:600;letter-spacing:.1em}
-  .delta.u{color:var(--up)} .delta.d{color:var(--down)} .delta.z{color:var(--dim)}
-  .start{font-size:.7rem;color:var(--dim);letter-spacing:.2em}
-
-  /* две кнопки */
-  .controls{display:flex;gap:14px;padding:0 32px 24px;height:30vh;min-height:170px}
-  .btn{
-    flex:1; cursor:pointer; border:2px solid; background:transparent;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5vh;
-    font-family:var(--mono); transition:background .12s, transform .08s;
-  }
-  .btn .arrow{font-size:clamp(2.4rem,8vh,5rem);line-height:1}
-  .btn .word{font-size:clamp(.8rem,2.4vh,1.3rem);letter-spacing:.45em;font-weight:600;padding-left:.45em}
-  .btn.up{border-color:var(--up);color:var(--up)}
-  .btn.down{border-color:var(--down);color:var(--down)}
-  .btn.up:hover{background:rgba(53,224,138,.12)}
-  .btn.down:hover{background:rgba(255,82,82,.12)}
-  .btn:active{transform:scale(.97)}
-  .btn.up:active{background:rgba(53,224,138,.28)}
-  .btn.down:active{background:rgba(255,82,82,.28)}
-
-  footer{
-    text-align:center; padding:10px; border-top:1px solid var(--line);
-    font-size:.7rem; color:var(--dim); letter-spacing:.12em;
-  }
-  footer b{color:var(--cream)}
-
-  /* вспышка на весь экран */
-  .flash{position:fixed;inset:0;pointer-events:none;opacity:0;z-index:10}
-  .flash.f-up{animation:fu .5s ease-out}
-  .flash.f-down{animation:fd .5s ease-out}
-  @keyframes fu{0%{opacity:1;background:radial-gradient(ellipse at center,rgba(53,224,138,.25),transparent 70%)}100%{opacity:0}}
-  @keyframes fd{0%{opacity:1;background:radial-gradient(ellipse at center,rgba(255,82,82,.25),transparent 70%)}100%{opacity:0}}
-
-  @media (prefers-reduced-motion:reduce){
-    .dot,.value.bump,.flash{animation:none !important}
-  }
+  body{margin:0;height:100vh;display:flex;flex-direction:column;background:#060A12;color:#EDE8DB;font-family:Arial,sans-serif;overflow:hidden}
+  header{display:flex;justify-content:space-between;padding:16px 32px;border-bottom:1px solid #222;font-size:14px;letter-spacing:3px;color:#8a8577}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .label{color:#8a8577;letter-spacing:8px;font-size:14px;margin-bottom:12px}
+  #value{font-size:20vh;font-weight:800;line-height:1}
+  #delta{font-size:24px;margin-top:10px;color:#8a8577}
+  .u{color:#35E08A}.d{color:#FF5252}
+  .controls{display:flex;gap:14px;padding:20px 32px;height:26vh}
+  button{flex:1;font-size:4vh;font-family:inherit;background:none;cursor:pointer;border:2px solid;letter-spacing:6px}
+  #up{color:#35E08A;border-color:#35E08A}
+  #down{color:#FF5252;border-color:#FF5252}
+  #up:active{background:rgba(53,224,138,.2)}
+  #down:active{background:rgba(255,82,82,.2)}
+  #flash{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="brand"><span class="dot"></span>КОТИРОВКА · LIVE</div>
-  <div class="clock" id="clock">--:--:--</div>
-</header>
+<header><span>● КОТИРОВКА · LIVE</span><span id="clock">--:--</span></header>
 
 <main>
   <div class="label">ТЕКУЩИЙ КУРС</div>
-  <div class="value" id="value">100</div>
-  <div class="delta z" id="delta">±0</div>
-  <svg id="spark" width="340" height="46" viewBox="0 0 340 46"></svg>
-  <div class="start">СТАРТ: 100</div>
+  <div id="value">100</div>
+  <div id="delta">±0</div>
 </main>
 
 <div class="controls">
-  <button class="btn up" id="up"><span class="arrow">▲</span><span class="word">РОСТ</span></button>
-  <button class="btn down" id="down"><span class="arrow">▼</span><span class="word">ПАДЕНИЕ</span></button>
+  <button id="up">▲ РОСТ</button>
+  <button id="down">▼ ПАДЕНИЕ</button>
 </div>
 
-<footer><b>↑</b> — рост&nbsp;&nbsp;·&nbsp;&nbsp;<b>↓</b> — падение&nbsp;&nbsp;·&nbsp;&nbsp;удерживай кнопку для серии</footer>
-
-<div class="flash" id="flash"></div>
+<div id="flash"></div>
 
 <script>
-let v = 100;
-const base = 100;
-const hist = [100];
+var v = 100;
 
-const valueEl = document.getElementById('value');
-const deltaEl = document.getElementById('delta');
-const sparkEl = document.getElementById('spark');
-const flashEl = document.getElementById('flash');
-
-/* график */
-function drawSpark(){
-  const w = 340, h = 46, n = hist.length;
-  const max = Math.max(...hist), min = Math.min(...hist), r = (max - min) || 1;
-  const pts = hist.map((val, i) => {
-    const x = n > 1 ? i / (n - 1) * w : w / 2;
-    const y = h - 5 - ((val - min) / r) * (h - 10);
-    return x.toFixed(1) + ',' + y.toFixed(1);
-  }).join(' ');
-  const col = v >= base ? 'var(--up)' : 'var(--down)';
-  sparkEl.innerHTML = `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.5"/>`;
+function move(dir){
+  v = Math.max(0, v + dir);
+  document.getElementById('value').textContent = v;
+  var d = v - 100;
+  var el = document.getElementById('delta');
+  el.textContent = (d > 0 ? '+' : d < 0 ? '-' : '±') + Math.abs(d);
+  el.className = d > 0 ? 'u' : d < 0 ? 'd' : '';
+  var f = document.getElementById('flash');
+  f.style.background = dir > 0 ? '#35E08A' : '#FF5252';
+  f.style.opacity = .18;
+  setTimeout(function(){ f.style.opacity = 0 }, 120);
+  blip(dir);
 }
 
-/* звук */
-let AC = null;
+var AC = null;
 function blip(dir){
   try{
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-    const o = AC.createOscillator(), g = AC.createGain();
-    o.type = 'sine';
-    o.frequency.setValueAtTime(dir > 0 ? 560 : 420, AC.currentTime);
-    o.frequency.exponentialRampToValueAtTime(dir > 0 ? 880 : 280, AC.currentTime + .09);
-    g.gain.setValueAtTime(.12, AC.currentTime);
+    var o = AC.createOscillator(), g = AC.createGain();
+    o.frequency.value = dir > 0 ? 880 : 300;
+    g.gain.setValueAtTime(.1, AC.currentTime);
     g.gain.exponentialRampToValueAtTime(.001, AC.currentTime + .12);
-    o.connect(g).connect(AC.destination);
+    o.connect(g); g.connect(AC.destination);
     o.start(); o.stop(AC.currentTime + .13);
   }catch(e){}
 }
 
-/* изменение курса */
-function move(dir){
-  v = Math.max(0, v + dir);
-  hist.push(v);
-  if(hist.length > 60) hist.shift();
+document.getElementById('up').onclick = function(){ move(1); };
+document.getElementById('down').onclick = function(){ move(-1); };
+document.onkeydown = function(e){
+  if(e.key === 'ArrowUp'){ move(1); e.preventDefault(); }
+  if(e.key === 'ArrowDown'){ move(-1); e.preventDefault(); }
+};
 
-  valueEl.textContent = v;
-  valueEl.classList.remove('bump'); void valueEl.offsetWidth; valueEl.classList.add('bump');
-
-  const d = v - base;
-  deltaEl.textContent = (d > 0 ? '+' : d < 0 ? '−' : '±') + Math.abs(d);
-  deltaEl.className = 'delta ' + (d > 0 ? 'u' : d < 0 ? 'd' : 'z');
-
-  flashEl.className = 'flash'; void flashEl.offsetWidth;
-  flashEl.classList.add(dir > 0 ? 'f-up' : 'f-down');
-
-  drawSpark();
-  blip(dir);
-}
-
-/* кнопки: клик + удержание для серии */
-function hold(btn, dir){
-  let t, iv;
-  const start = () => {
-    move(dir);
-    t = setTimeout(() => { iv = setInterval(() => move(dir), 90); }, 380);
-  };
-  const stop = () => { clearTimeout(t); clearInterval(iv); };
-  btn.addEventListener('pointerdown', e => { e.preventDefault(); start(); });
-  ['pointerup','pointerleave','pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
-}
-hold(document.getElementById('up'), +1);
-hold(document.getElementById('down'), -1);
-
-/* клавиатура */
-document.addEventListener('keydown', e => {
-  if(e.key === 'ArrowUp'){ e.preventDefault(); move(+1); }
-  if(e.key === 'ArrowDown'){ e.preventDefault(); move(-1); }
-});
-
-/* часы */
-function tick(){
+setInterval(function(){
   document.getElementById('clock').textContent = new Date().toLocaleTimeString('ru-RU');
-}
-setInterval(tick, 1000); tick();
-
-drawSpark();
+}, 1000);
 </script>
+
 </body>
 </html>

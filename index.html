@@ -102,7 +102,6 @@
     overflow: hidden;
   }
 
-  /* Волны */
   .wave {
     position: absolute;
     left: 0;
@@ -112,63 +111,62 @@
 
   .wave svg {
     position: absolute;
-    top: -20px;
+    top: -25px;
     width: 100%;
-    height: 40px;
+    height: 50px;
   }
 
-  /* Слой 1 — основная волна */
+  /* Усиленные колебания */
   .wave-1 {
-    animation: waveDrift1 3s ease-in-out infinite;
+    animation: waveDrift1 2.5s ease-in-out infinite;
     opacity: 0.9;
   }
 
-  /* Слой 2 — встречная волна */
   .wave-2 {
-    animation: waveDrift2 4.5s ease-in-out infinite;
-    opacity: 0.5;
+    animation: waveDrift2 3.5s ease-in-out infinite;
+    opacity: 0.6;
   }
 
-  /* Слой 3 — фоновая рябь */
   .wave-3 {
-    animation: waveDrift3 6s ease-in-out infinite;
-    opacity: 0.3;
+    animation: waveDrift3 4.5s ease-in-out infinite;
+    opacity: 0.4;
   }
 
   @keyframes waveDrift1 {
     0%, 100% { transform: translateX(0) translateY(0); }
-    25%      { transform: translateX(-25%) translateY(-2px); }
+    25%      { transform: translateX(-30%) translateY(-6px); }
     50%      { transform: translateX(-50%) translateY(0); }
-    75%      { transform: translateX(-25%) translateY(2px); }
+    75%      { transform: translateX(-30%) translateY(6px); }
   }
 
   @keyframes waveDrift2 {
     0%, 100% { transform: translateX(-50%) translateY(0); }
-    25%      { transform: translateX(-25%) translateY(2px); }
+    25%      { transform: translateX(-20%) translateY(5px); }
     50%      { transform: translateX(0) translateY(0); }
-    75%      { transform: translateX(-25%) translateY(-2px); }
+    75%      { transform: translateX(-20%) translateY(-5px); }
   }
 
   @keyframes waveDrift3 {
     0%, 100% { transform: translateX(0) translateY(0); }
-    33%      { transform: translateX(-33%) translateY(-1px); }
-    66%      { transform: translateX(-66%) translateY(1px); }
+    33%      { transform: translateX(-35%) translateY(-4px); }
+    66%      { transform: translateX(-70%) translateY(4px); }
   }
 
-  /* Покачивание всей жидкости */
+  /* Более явное покачивание жидкости */
   .liquid-inner {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    animation: liquidSway 5s ease-in-out infinite;
+    animation: liquidSway 3s ease-in-out infinite;
   }
 
   @keyframes liquidSway {
-    0%, 100% { transform: skewX(0deg); }
-    25%      { transform: skewX(0.5deg); }
-    75%      { transform: skewX(-0.5deg); }
+    0%, 100% { transform: skewX(0deg) scaleX(1); }
+    25%      { transform: skewX(2deg) scaleX(1.01); }
+    50%      { transform: skewX(0deg) scaleX(1); }
+    75%      { transform: skewX(-2deg) scaleX(1.01); }
   }
 
   .liquid::after {
@@ -254,8 +252,8 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0b-4UnApv9i_jc90xiSgO2ZVQVQG2STGHWPQUICQAtQ6_TqkPSVyQ3Ays41SRAZzo/exec';
 
 const WAVE_SVG = `
-<svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-  <path d="M0,20 Q75,0 150,20 T300,20 T450,20 T600,20 T750,20 T900,20 T1050,20 T1200,20 L1200,40 L0,40 Z"/>
+<svg viewBox="0 0 1200 50" preserveAspectRatio="none">
+  <path d="M0,25 Q100,5 200,25 T400,25 T600,25 T800,25 T1000,25 T1200,25 L1200,50 L0,50 Z"/>
 </svg>
 `;
 

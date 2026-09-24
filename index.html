@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>8 Колб — Данные из Google Sheets</title>
+<title>🧪 Лаборатория данных</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -43,7 +43,6 @@
     align-items: flex-end;
   }
 
-  /* ===== КОЛБА ===== */
   .flask-wrapper {
     display: flex;
     flex-direction: column;
@@ -62,7 +61,6 @@
     background: rgba(255,255,255,0.03);
   }
 
-  /* Горлышко колбы */
   .flask::before {
     content: '';
     position: absolute;
@@ -76,7 +74,6 @@
     border-radius: 5px 5px 0 0;
   }
 
-  /* Жидкость */
   .liquid {
     position: absolute;
     bottom: 0;
@@ -87,7 +84,6 @@
     border-radius: 0 0 17px 17px;
   }
 
-  /* Волна сверху жидкости */
   .liquid::before,
   .liquid::after {
     content: '';
@@ -116,7 +112,6 @@
     100% { transform: rotate(360deg); }
   }
 
-  /* Блик на стекле */
   .flask::after {
     content: '';
     position: absolute;
@@ -130,7 +125,6 @@
     pointer-events: none;
   }
 
-  /* Значение */
   .value {
     position: absolute;
     bottom: 50%;
@@ -150,7 +144,6 @@
     max-width: 90px;
   }
 
-  /* ===== ЦВЕТА КОЛБ ===== */
   .flask-wrapper:nth-child(1) .liquid { background: linear-gradient(0deg, #ff416c, #ff4b2b); }
   .flask-wrapper:nth-child(2) .liquid { background: linear-gradient(0deg, #f7971e, #ffd200); }
   .flask-wrapper:nth-child(3) .liquid { background: linear-gradient(0deg, #11998e, #38ef7d); }
@@ -160,7 +153,6 @@
   .flask-wrapper:nth-child(7) .liquid { background: linear-gradient(0deg, #c471f5, #fa71cd); }
   .flask-wrapper:nth-child(8) .liquid { background: linear-gradient(0deg, #00c9ff, #92fe9d); }
 
-  /* Пузырьки */
   .bubble {
     position: absolute;
     background: rgba(255,255,255,0.2);
@@ -177,23 +169,16 @@
 <body>
 
 <h1>🧪 Лаборатория данных</h1>
-<p class="status" id="status">Загрузка данных из Google Sheets...</p>
+<p class="status" id="status">Загрузка данных...</p>
 
 <div class="flasks-container" id="flasks"></div>
 
 <script>
 // =============================================
-//  ВСТАВЬ СВОЙ ID ТАБЛИЦЫ СЮДА
+//  ⚠️ ВСТАВЬ СЮДА URL WEB APP ИЗ APPS SCRIPT
 // =============================================
-const SPREADSHEET_ID = '2PACX-1vTOsr5b14xxsvPN_YbBrscLa_iiuE5_y9_dl0kQFBBdeyCuTZG-HDBSTefg7oxrAs51kFwCE3Vo31YB/pubhtml';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0b-4UnApv9i_jc90xiSgO2ZVQVQG2STGHWPQUICQAtQ6_TqkPSVyQ3Ays41SRAZzo/exec';
 
-// Цвета для пузырьков (совпадают с градиентами)
-const COLORS = [
-  '#ff416c','#ffd200','#38ef7d','#2575fc',
-  '#f7b733','#00b4db','#fa71cd','#92fe9d'
-];
-
-// Создаём 8 колб в DOM
 const container = document.getElementById('flasks');
 for (let i = 0; i < 8; i++) {
   const wrapper = document.createElement('div');
@@ -208,8 +193,8 @@ for (let i = 0; i < 8; i++) {
   container.appendChild(wrapper);
 }
 
-// Генерируем пузырьки внутри каждой колбы
-document.querySelectorAll('.flask').forEach((flask, i) => {
+// Пузырьки
+document.querySelectorAll('.flask').forEach((flask) => {
   for (let b = 0; b < 4; b++) {
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
@@ -224,46 +209,38 @@ document.querySelectorAll('.flask').forEach((flask, i) => {
   }
 });
 
-// Загрузка данных
 async function loadData() {
   const statusEl = document.getElementById('status');
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
-    const response = await fetch(url);
-    const text = await response.text();
+    const response = await fetch(SCRIPT_URL);
 
-    // Google возвращает JSONP-подобный ответ, нужно обрезать
-    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
-    if (!jsonStr) throw new Error('Не удалось распарсить ответ');
+    if (!response.ok) throw new Error('HTTP ' + response.status);
 
-    const data = JSON.parse(jsonStr[1]);
-    const rows = data.table.rows;
+    const data = await response.json();
 
-    for (let i = 0; i < Math.min(rows.length, 8); i++) {
-      const name = rows[i].c[0]?.v ?? `Колба ${i + 1}`;
-      const val  = Math.min(Math.max(rows[i].c[1]?.v ?? 0, 0), 100);
+    if (!Array.isArray(data)) throw new Error('Неверный формат данных');
+
+    for (let i = 0; i < Math.min(data.length, 8); i++) {
+      const name = data[i].name ?? `Колба ${i + 1}`;
+      const val  = Math.min(Math.max(Number(data[i].value) ?? 0, 0), 100);
 
       document.getElementById(`label-${i}`).textContent = name;
-      document.getElementById(`value-${i}`).textContent = val;
+      document.getElementById(`value-${i}`).textContent = Math.round(val);
 
-      // Заполняем жидкость
       const liquid = document.getElementById(`liquid-${i}`);
-      // Небольшая задержка для анимации
       setTimeout(() => {
         liquid.style.height = val + '%';
       }, i * 150);
     }
 
-    statusEl.textContent = '✅ Данные загружены успешно';
+    statusEl.textContent = '✅ Данные загружены: ' + new Date().toLocaleTimeString();
     statusEl.className = 'status ok';
 
   } catch (err) {
-    console.error(err);
-    statusEl.textContent = '❌ Ошибка загрузки: ' + err.message;
+    console.error('Ошибка:', err);
+    statusEl.textContent = '❌ Ошибка: ' + err.message + ' (демо-режим)';
     statusEl.className = 'status err';
 
-    // Демо-режим: заполняем случайными данными
-    statusEl.textContent += ' (показан демо-режим)';
     for (let i = 0; i < 8; i++) {
       const val = Math.floor(Math.random() * 101);
       document.getElementById(`value-${i}`).textContent = val;
@@ -275,8 +252,6 @@ async function loadData() {
 }
 
 loadData();
-
-// Автообновление каждые 30 секунд
 setInterval(loadData, 30000);
 </script>
 

@@ -7,11 +7,16 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  :root {
+    /* ⚙️ НАСТРОЙКА: высота столешницы (снизу, в % от высоты сцены).
+       Если колбы "висят" или "тонут" — меняй это число */
+    --shelf-bottom: 21%;
+  }
+
   body {
     min-height: 100vh;
-    background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a1a 100%);
+    background: #0b1512;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,48 +24,77 @@
     padding: 20px;
   }
 
+  /* ===== СЦЕНА С ФОНОМ ===== */
+  .scene {
+    position: relative;
+    width: min(96vw, 1100px);
+    aspect-ratio: 1440 / 766;
+    background: url('lab.png') center / cover no-repeat;
+    border-radius: 18px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.7);
+    overflow: hidden;
+  }
+
   h1 {
-    margin-bottom: 10px;
-    font-size: 2rem;
-    background: linear-gradient(90deg, #00d2ff, #7b2ff7, #ff006e);
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(1.1rem, 3vw, 2rem);
+    background: linear-gradient(90deg, #7ef5c8, #ffd76e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    white-space: nowrap;
   }
 
   .status {
-    margin-bottom: 30px;
-    font-size: 0.9rem;
-    color: #888;
-    transition: color 0.3s;
+    position: absolute;
+    top: 13%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.65rem, 1.4vw, 0.9rem);
+    color: #cfd8d3;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+    white-space: nowrap;
   }
-  .status.ok { color: #4caf50; }
-  .status.err { color: #f44336; }
+  .status.ok { color: #7ef5c8; }
+  .status.err { color: #ff7b7b; }
 
+  /* ===== КОЛБЫ НА СТОЛЕ ===== */
   .flasks-container {
+    position: absolute;
+    left: 50%;
+    bottom: var(--shelf-bottom);
+    transform: translateX(-50%);
     display: flex;
-    gap: 25px;
-    flex-wrap: wrap;
-    justify-content: center;
     align-items: flex-end;
+    gap: clamp(6px, 1.2vw, 14px);
+    width: 56%;
+  }
+
+  @media (max-width: 600px) {
+    .flasks-container { width: 64%; }
   }
 
   .flask-wrapper {
+    flex: 1;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    justify-content: center;
   }
 
   .flask {
     position: relative;
-    width: 80px;
-    height: 220px;
+    width: 100%;
+    max-width: 70px;
+    height: clamp(90px, 17vw, 190px);
     border: 2px solid rgba(255,255,255,0.25);
     border-top: none;
     border-radius: 0 0 25px 25px;
     overflow: hidden;
     background: rgba(255,255,255,0.02);
-    box-shadow: 
+    box-shadow:
       inset 0 0 20px rgba(255,255,255,0.05),
       0 0 15px rgba(0,0,0,0.5);
   }
@@ -68,11 +102,11 @@
   .flask::before {
     content: '';
     position: absolute;
-    top: -18px;
+    top: -16px;
     left: 50%;
     transform: translateX(-50%);
-    width: 36px;
-    height: 18px;
+    width: 60%;
+    height: 16px;
     border: 2px solid rgba(255,255,255,0.25);
     border-bottom: none;
     border-radius: 6px 6px 0 0;
@@ -81,11 +115,11 @@
   .flask::after {
     content: '';
     position: absolute;
-    top: 15px;
-    left: 10px;
-    width: 8px;
+    top: 12px;
+    left: 15%;
+    width: 12%;
     height: 50%;
-    background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
     border-radius: 10px;
     z-index: 10;
     pointer-events: none;
@@ -116,21 +150,9 @@
     height: 50px;
   }
 
-  /* Усиленные колебания */
-  .wave-1 {
-    animation: waveDrift1 2.5s ease-in-out infinite;
-    opacity: 0.9;
-  }
-
-  .wave-2 {
-    animation: waveDrift2 3.5s ease-in-out infinite;
-    opacity: 0.6;
-  }
-
-  .wave-3 {
-    animation: waveDrift3 4.5s ease-in-out infinite;
-    opacity: 0.4;
-  }
+  .wave-1 { animation: waveDrift1 2.5s ease-in-out infinite; opacity: 0.9; }
+  .wave-2 { animation: waveDrift2 3.5s ease-in-out infinite; opacity: 0.6; }
+  .wave-3 { animation: waveDrift3 4.5s ease-in-out infinite; opacity: 0.4; }
 
   @keyframes waveDrift1 {
     0%, 100% { transform: translateX(0) translateY(0); }
@@ -138,27 +160,22 @@
     50%      { transform: translateX(-50%) translateY(0); }
     75%      { transform: translateX(-30%) translateY(6px); }
   }
-
   @keyframes waveDrift2 {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     25%      { transform: translateX(-20%) translateY(5px); }
     50%      { transform: translateX(0) translateY(0); }
     75%      { transform: translateX(-20%) translateY(-5px); }
   }
-
   @keyframes waveDrift3 {
     0%, 100% { transform: translateX(0) translateY(0); }
     33%      { transform: translateX(-35%) translateY(-4px); }
     66%      { transform: translateX(-70%) translateY(4px); }
   }
 
-  /* Более явное покачивание жидкости */
   .liquid-inner {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
     animation: liquidSway 3s ease-in-out infinite;
   }
 
@@ -172,14 +189,11 @@
   .liquid::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, 
-      rgba(255,255,255,0.15) 0%, 
-      transparent 20%, 
-      transparent 80%, 
+    inset: 0;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.15) 0%,
+      transparent 20%,
+      transparent 80%,
       rgba(0,0,0,0.2) 100%);
     pointer-events: none;
   }
@@ -189,42 +203,41 @@
     bottom: 50%;
     left: 50%;
     transform: translate(-50%, 50%);
-    font-size: 1.2rem;
+    font-size: clamp(0.7rem, 1.6vw, 1.2rem);
     font-weight: bold;
     z-index: 5;
     text-shadow: 0 0 10px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.8);
     transition: bottom 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  /* Подписи на передней части стола */
   .label {
-    font-size: 0.85rem;
-    color: #aaa;
-    text-align: center;
-    max-width: 90px;
-    font-weight: 500;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.55rem, 1.2vw, 0.85rem);
+    color: #f0e2c0;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    white-space: nowrap;
+    font-weight: 600;
   }
 
+  /* ===== ЦВЕТА ===== */
   .flask-wrapper:nth-child(1) .liquid { background: linear-gradient(180deg, #ff416c 0%, #ff4b2b 100%); }
   .flask-wrapper:nth-child(1) .wave svg path { fill: #ff416c; }
-  
   .flask-wrapper:nth-child(2) .liquid { background: linear-gradient(180deg, #f7971e 0%, #ffd200 100%); }
   .flask-wrapper:nth-child(2) .wave svg path { fill: #f7971e; }
-  
   .flask-wrapper:nth-child(3) .liquid { background: linear-gradient(180deg, #11998e 0%, #38ef7d 100%); }
   .flask-wrapper:nth-child(3) .wave svg path { fill: #11998e; }
-  
   .flask-wrapper:nth-child(4) .liquid { background: linear-gradient(180deg, #6a11cb 0%, #2575fc 100%); }
   .flask-wrapper:nth-child(4) .wave svg path { fill: #6a11cb; }
-  
   .flask-wrapper:nth-child(5) .liquid { background: linear-gradient(180deg, #fc4a1a 0%, #f7b733 100%); }
   .flask-wrapper:nth-child(5) .wave svg path { fill: #fc4a1a; }
-  
   .flask-wrapper:nth-child(6) .liquid { background: linear-gradient(180deg, #00b4db 0%, #0083b0 100%); }
   .flask-wrapper:nth-child(6) .wave svg path { fill: #00b4db; }
-  
   .flask-wrapper:nth-child(7) .liquid { background: linear-gradient(180deg, #c471f5 0%, #fa71cd 100%); }
   .flask-wrapper:nth-child(7) .wave svg path { fill: #c471f5; }
-  
   .flask-wrapper:nth-child(8) .liquid { background: linear-gradient(180deg, #00c9ff 0%, #92fe9d 100%); }
   .flask-wrapper:nth-child(8) .wave svg path { fill: #00c9ff; }
 
@@ -243,10 +256,11 @@
 </head>
 <body>
 
-<h1>🧪 Лаборатория данных</h1>
-<p class="status" id="status">Загрузка данных...</p>
-
-<div class="flasks-container" id="flasks"></div>
+<div class="scene">
+  <h1>🧪 Лаборатория данных</h1>
+  <p class="status" id="status">Загрузка данных...</p>
+  <div class="flasks-container" id="flasks"></div>
+</div>
 
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0b-4UnApv9i_jc90xiSgO2ZVQVQG2STGHWPQUICQAtQ6_TqkPSVyQ3Ays41SRAZzo/exec';

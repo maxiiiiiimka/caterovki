@@ -8,9 +8,10 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    /* ⚙️ НАСТРОЙКА: высота столешницы (снизу, в % от высоты сцены).
-       Если колбы "висят" или "тонут" — меняй это число */
+    /* ⚙️ НАСТРОЙКА: высота столешницы (снизу, в % от высоты сцены) */
     --shelf-bottom: 21%;
+    /* ⚙️ НАСТРОЙКА: насколько затемнить фон (0 = прозрачно, 1 = чёрный) */
+    --darkness: 0.45;
   }
 
   body {
@@ -29,7 +30,10 @@
     position: relative;
     width: min(96vw, 1100px);
     aspect-ratio: 1440 / 766;
-    background: url('lab.png') center / cover no-repeat;
+    /* Тёмный слой ПОВЕРХ картинки */
+    background:
+      linear-gradient(rgba(6, 12, 10, var(--darkness)), rgba(6, 12, 10, var(--darkness))),
+      url('lab.png') center / cover no-repeat;
     border-radius: 18px;
     box-shadow: 0 25px 80px rgba(0,0,0,0.7);
     overflow: hidden;
@@ -87,8 +91,9 @@
   .flask {
     position: relative;
     width: 100%;
-    max-width: 70px;
-    height: clamp(90px, 17vw, 190px);
+    max-width: 74px;
+    /* ⬆️ КОЛБЫ ВЫШЕ: было clamp(90px, 17vw, 190px) */
+    height: clamp(120px, 24vw, 260px);
     border: 2px solid rgba(255,255,255,0.25);
     border-top: none;
     border-radius: 0 0 25px 25px;
@@ -210,7 +215,6 @@
     transition: bottom 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* Подписи на передней части стола */
   .label {
     position: absolute;
     top: calc(100% + 8px);
@@ -250,7 +254,7 @@
   }
   @keyframes rise {
     0%   { transform: translateY(0) scale(1); opacity: 0.7; }
-    100% { transform: translateY(-200px) scale(0.2); opacity: 0; }
+    100% { transform: translateY(-240px) scale(0.2); opacity: 0; }
   }
 </style>
 </head>
@@ -263,7 +267,7 @@
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0b-4UnApv9i_jc90xiSgO2ZVQVQG2STGHWPQUICQAtQ6_TqkPSVyQ3Ays41SRAZzo/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/ТВОЙ_ДЛИННЫЙ_ID/exec';
 
 const WAVE_SVG = `
 <svg viewBox="0 0 1200 50" preserveAspectRatio="none">
